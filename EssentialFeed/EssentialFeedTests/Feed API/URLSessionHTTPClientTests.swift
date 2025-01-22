@@ -23,7 +23,7 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     
     func test_getFromURL_performsGETRequestWithURL() {
-        let url = anyURL()
+        let url = URL(string: "http://example.com")!
         let exp = expectation(description: "Wait for request")
         
         URLProtocolStub.observeRequests { request in
@@ -188,7 +188,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         static func stopInterceptingRequests() {
             URLProtocol.unregisterClass(URLProtocolStub.self)
             stub = nil
-            requestObserver = nil
+            URLProtocolStub.requestObserver = nil
         }
         
         override class func canonicalRequest(for request: URLRequest) -> URLRequest {
