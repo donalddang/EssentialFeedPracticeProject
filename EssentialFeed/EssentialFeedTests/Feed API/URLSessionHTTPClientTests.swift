@@ -23,7 +23,7 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     
     func test_getFromURL_performsGETRequestWithURL() {
-        let url = URL(string: "http://example.com")!
+        let url = anyURL()
         let exp = expectation(description: "Wait for request")
         
         URLProtocolStub.observeRequests { request in
@@ -173,7 +173,6 @@ class URLSessionHTTPClientTests: XCTestCase {
         }
         ///we can handle this request and can control - this URLProtocolStub.stubs[url] != nil will only stub specific urls. we should instead remove this and intercept all requests so we know the problem is the URL
         override class func canInit(with request: URLRequest) -> Bool {
-            requestObserver?(request)
             return true // intercept ALL requests
         }
         
@@ -196,7 +195,10 @@ class URLSessionHTTPClientTests: XCTestCase {
         }
         
         override func startLoading() {
-            
+            if let requestObserver = URLProtocolStub.requestObserver {
+                client?.urlProtocolDidFinishLoading(self)
+                return requestObserver(request)
+            }
             if let data = URLProtocolStub.stub?.data {
                 client?.urlProtocol(self, didLoad: data)
             }
