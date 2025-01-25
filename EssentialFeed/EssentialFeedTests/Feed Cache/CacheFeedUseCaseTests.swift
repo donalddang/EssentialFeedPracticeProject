@@ -8,10 +8,6 @@ import EssentialFeed
 import Foundation
 import XCTest
 
-protocol DateProvider {
-    
-}
-
 class LocalFeedLoader {
     private let store: FeedStore
     private let currentDate: () -> Date
@@ -136,7 +132,6 @@ class CacheFeedUseCaseTests: XCTestCase {
     func test_save_succeedsOnSuccessfulCacheInsertion() {
         let items = [uniqueItem(), uniqueItem()]
         let (sut, store) = makeSUT()
-        let insertionError = anyNSError()
         let exp = expectation(description: "Wait for save completion")
         
         var receivedError: Error?
