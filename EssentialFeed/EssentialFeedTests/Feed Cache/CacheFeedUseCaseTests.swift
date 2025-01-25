@@ -4,10 +4,9 @@
 //
 //  Created by Donald Dang on 1/25/25.
 //
-
-import Testing
 import EssentialFeed
 import Foundation
+import XCTest
 
 class LocalFeedLoader {
     private let store: FeedStore
@@ -22,34 +21,51 @@ class LocalFeedLoader {
 
 class FeedStore {
     var deleteCachedFeedCallCount = 0
-    
+    var insertCallCount = 0
     func deleteCachedFeed() {
         deleteCachedFeedCallCount += 1
     }
+    
+    func completeDeletion(with error: Error, at index: Int = 0) {
+        
+    }
 }
 
-struct CacheFeedUseCaseTests {
+class CacheFeedUseCaseTests: XCTestCase {
 
-    @Test func test()  {
-        let (sut, store) = makeSUT()
+    func test()  {
+        let (_, store) = makeSUT()
         
-        #expect(store.deleteCachedFeedCallCount == 0)
+        XCTAssertEqual(store.deleteCachedFeedCallCount, 0)
     }
     
-    @Test func test_save_requestsCacheDeletion() {
+    func test_save_requestsCacheDeletion() {
         let (sut, store) = makeSUT()
         let items = [uniqueItem(), uniqueItem()]
         
         sut.save(items)
         
-        #expect(store.deleteCachedFeedCallCount == 1)
+        XCTAssertEqual(store.deleteCachedFeedCallCount, 1)
+    }
+    
+    func test_save_doesNotRequestCacheInsertDeltionError() {
+        let (sut, store) = makeSUT()
+        let items = [uniqueItem(), uniqueItem()]
+        let deletionError = anyNSError()
+        
+        sut.save(items)
+        store.completeDeletion(with: deletionError)
+        
+        XCTAssertEqual(store.insertCallCount, 0)
     }
     
     // MARK: - Helpers
     
-    private func makeSUT() -> (sut: LocalFeedLoader, store: FeedStore) {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStore) {
         let store = FeedStore()
         let sut = LocalFeedLoader(store: store)
+        trackForMemoryLeaks(store, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, store)
     }
     
@@ -59,6 +75,10 @@ struct CacheFeedUseCaseTests {
     
     private func anyURL() -> URL {
         return URL(string: "http://any-url.com/")!
+    }
+    
+    private func anyNSError() -> NSError {
+        return NSError(domain: "any error", code: 0)
     }
 
 }
