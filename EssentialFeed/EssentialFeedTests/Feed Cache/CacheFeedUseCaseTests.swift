@@ -31,15 +31,13 @@ class FeedStore {
 struct CacheFeedUseCaseTests {
 
     @Test func test()  {
-        let store = FeedStore()
-        _ = LocalFeedLoader(store: store)
+        let (sut, store) = makeSUT()
         
         #expect(store.deleteCachedFeedCallCount == 0)
     }
     
     @Test func test_save_requestsCacheDeletion() {
-        let store = FeedStore()
-        let sut = LocalFeedLoader(store: store)
+        let (sut, store) = makeSUT()
         let items = [uniqueItem(), uniqueItem()]
         
         sut.save(items)
@@ -48,6 +46,12 @@ struct CacheFeedUseCaseTests {
     }
     
     // MARK: - Helpers
+    
+    private func makeSUT() -> (sut: LocalFeedLoader, store: FeedStore) {
+        let store = FeedStore()
+        let sut = LocalFeedLoader(store: store)
+        return (sut, store)
+    }
     
     private func uniqueItem() -> FeedItem {
         return FeedItem(id: UUID(), description: "", location: "" , imageURL: anyURL())
