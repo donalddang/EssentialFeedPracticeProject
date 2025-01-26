@@ -8,39 +8,6 @@ import EssentialFeed
 import Foundation
 import XCTest
 
-class LocalFeedLoader {
-    private let store: FeedStore
-    private let currentDate: () -> Date
-    init(store: FeedStore, currentDate: @escaping () -> Date) {
-        self.store = store
-        self.currentDate = currentDate
-    }
-    
-    func save(_ items: [FeedItem], completion: @escaping (Error?) -> Void) {
-        store.deleteCachedFeed { [weak self] error in
-            guard let self = self else { return }
-            if let error = error {
-                completion(error)
-            } else {
-                self.cache(items, with: completion)
-            }
-        }
-    }
-    private func cache(_ items: [FeedItem], with completion: @escaping (Error?) -> Void) {
-        store.insert(items, timestamp: self.currentDate()) { [weak self] error in
-            guard self != nil else { return }
-            completion(error)
-        }
-    }
-}
-
-protocol FeedStore {
-    typealias DeletionCompletion = (Error?) -> Void
-    typealias InsertionCompletion = (Error?) -> Void
-    func deleteCachedFeed(completion: @escaping DeletionCompletion)
-    func insert(_ items: [FeedItem], timestamp: Date, completion: @escaping InsertionCompletion)
-}
-
 /*
  
  class FeedStore {
@@ -137,7 +104,7 @@ class CacheFeedUseCaseTests: XCTestCase {
     func test_save_doesntDeliverInsertionErrorAfterSUTHasBeenDeallocated() {
         let store = FeedStoreSpy()
         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
-        var recievedResults = [Error?]()
+        var recievedResults = [LocalFeedLoader.SaveResult]()
         sut?.save([uniqueItem()]) { recievedResults.append($0)}
         store.completeDeletionSuccessfully()
         sut = nil
@@ -149,7 +116,7 @@ class CacheFeedUseCaseTests: XCTestCase {
     func test_save_doesntDeliverDeletionErrorAfterSUTHasBeenDeallocated() {
         let store = FeedStoreSpy()
         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
-        var recievedResults = [Error?]()
+        var recievedResults = [LocalFeedLoader.SaveResult]()
         sut?.save([uniqueItem()]) { recievedResults.append($0)}
         store.completeDeletionSuccessfully()
         sut = nil
