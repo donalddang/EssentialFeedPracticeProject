@@ -29,14 +29,29 @@ public final class RemoteFeedLoader: FeedLoader {
             switch result {
             case let .success(data, response):
                 /// the previous implementation used a data, _ and we never used it so we refactored the testLoadDeliversErrorOnNon200StatusCode to add the makeItemsJSON with an empty list and removed the default Data(). Then we implemented the FeedItemsMapper below to make it cleaner.
-                completion(FeedItemsMapper.map(data, from: response))
+                completion(RemoteFeedLoader.map(data, from: response))
+                //completion(FeedItemsMapper.map(data, from: response))
             case .failure:
                 completion(.failure(Error.connectivity))
             }
         }
     }
     
+    private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+        do {
+            let items = try FeedItemsMapper.map(data, from: response)
+            return .success(items.toModels())
+        } catch {
+            return .failure(error)
+        }
+    }
     
+}
+
+private extension Array where Element == RemoteFeedItem {
+    func toModels() -> [FeedItem] {
+        return map { FeedItem(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.image)}
+    }
 }
 
 
