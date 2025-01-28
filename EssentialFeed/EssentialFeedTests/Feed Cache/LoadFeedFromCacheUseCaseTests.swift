@@ -99,7 +99,7 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
     
-    func test_load_deletesCacheOnLessThanSevenDaysOldCache() {
+    func test_load_hasNoSideEffectsOnSevenDaysOldCache() {
         let feed = uniqueImageFeed()
         let fixedCurrentDate = Date()
         let sevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7)
@@ -108,10 +108,10 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         sut.load { _ in }
         store.completeRetrieval(with: feed.local, timestamp: sevenDaysOldTimestamp)
         
-        XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCachedFeed])
+        XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
     
-    func test_load_deletesCacheOnGreaterThanSevenDaysOldCache() {
+    func test_load_hasNoSideEffectsOnGreaterThanSevenDaysOldCache() {
         let feed = uniqueImageFeed()
         let fixedCurrentDate = Date()
         let moreThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: -1)
@@ -120,7 +120,7 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         sut.load { _ in }
         store.completeRetrieval(with: feed.local, timestamp: moreThanSevenDaysOldTimestamp)
         
-        XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCachedFeed])
+        XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
     
     func test_loadDoesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
@@ -138,20 +138,6 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
     
     
     //-MARK: Helpers
-    
-    private func anyURL() -> URL {
-        return URL(string: "http://any-url.com/")!
-    }
-    
-    private func uniqueImage() -> FeedItem {
-        return FeedItem(id: UUID(), description: "", location: "" , imageURL: anyURL())
-    }
-    
-    private func uniqueImageFeed() -> (models: [FeedItem], local: [FeedImage]) {
-        let models = [uniqueImage(), uniqueImage()]
-        let local = models.map { FeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.imageURL)}
-        return (models, local)
-    }
     
     private func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
         let store = FeedStoreSpy()
@@ -178,21 +164,5 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         
         action()
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    
-    
-    private func anyNSError() -> NSError {
-        return NSError(domain: "any error", code: 0)
-    }
-}
-
-private extension Date {
-    func adding(days: Int) -> Date {
-        return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
-    }
-    
-    func adding(seconds: TimeInterval) -> Date {
-        return self + seconds
     }
 }

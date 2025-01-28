@@ -45,6 +45,43 @@ class ValidateFeedCacheUseCase: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
     
+    func test_load_deletesSevenDaysOldCache() {
+        let feed = uniqueImageFeed()
+        let fixedCurrentDate = Date()
+        let sevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7)
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
+        
+        sut.validateCache()
+        store.completeRetrieval(with: feed.local, timestamp: sevenDaysOldTimestamp)
+        
+        XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCachedFeed])
+    }
+    
+    func test_load_deletesCacheOnGreaterThanSevenDaysOldCache() {
+        let feed = uniqueImageFeed()
+        let fixedCurrentDate = Date()
+        let moreThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: -1)
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
+        
+        sut.validateCache()
+        store.completeRetrieval(with: feed.local, timestamp: moreThanSevenDaysOldTimestamp)
+        
+        XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCachedFeed])
+    }
+    
+    func test_loadDoesNotDeleteInvalidCacheAfterSUTHasBeenDeallocated() {
+        let store = FeedStoreSpy()
+        var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
+        var recievedResults = [LocalFeedLoader.LoadResult]()
+        sut?.validateCache()
+        
+        sut = nil
+        store.completeRetrieval(with: anyNSError())
+        
+        XCTAssertTrue(recievedResults.isEmpty)
+        
+    }
+    
     //-MARK: Helpers
     
     private func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
@@ -54,33 +91,6 @@ class ValidateFeedCacheUseCase: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, store)
     }
-    
-    private func anyNSError() -> NSError {
-        return NSError(domain: "any error", code: 0)
-    }
-    
-    private func uniqueImageFeed() -> (models: [FeedItem], local: [FeedImage]) {
-        let models = [uniqueImage(), uniqueImage()]
-        let local = models.map { FeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.imageURL)}
-        return (models, local)
-    }
-    
-    private func uniqueImage() -> FeedItem {
-        return FeedItem(id: UUID(), description: "", location: "" , imageURL: anyURL())
-    }
-    
-    private func anyURL() -> URL {
-        return URL(string: "http://any-url.com/")!
-    }
 
 }
 
-private extension Date {
-    func adding(days: Int) -> Date {
-        return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
-    }
-    
-    func adding(seconds: TimeInterval) -> Date {
-        return self + seconds
-    }
-}
