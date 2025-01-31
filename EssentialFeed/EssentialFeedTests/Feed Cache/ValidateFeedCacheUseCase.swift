@@ -72,7 +72,7 @@ class ValidateFeedCacheUseCase: XCTestCase {
     func test_loadDoesNotDeleteInvalidCacheAfterSUTHasBeenDeallocated() {
         let store = FeedStoreSpy()
         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
-        var recievedResults = [LocalFeedLoader.LoadResult]()
+        let recievedResults = [LocalFeedLoader.LoadResult]()
         sut?.validateCache()
         
         sut = nil
