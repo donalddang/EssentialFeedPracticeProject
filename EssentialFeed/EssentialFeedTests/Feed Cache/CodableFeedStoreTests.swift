@@ -36,7 +36,11 @@ class CodableFeedStore {
         }
     }
     
-    private let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("image-feed.store")
+    private let storeURL: URL
+    
+    init(storeURL: URL) {
+        self.storeURL = storeURL
+    }
     
     
     func retrieve(completion: @escaping FeedStore.RetrievalCompletion) {
@@ -73,7 +77,7 @@ class CodableFeedStoreTests: XCTestCase {
     }
 
     func test_retrievesDeliversEmptyOnEmptyCache() {
-        let sut = CodableFeedStore()
+        let sut = makeSUT()
         let exp = expectation(description: "Wait for cache")
         sut.retrieve { result in
             switch result {
@@ -89,7 +93,7 @@ class CodableFeedStoreTests: XCTestCase {
     }
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
-        let sut = CodableFeedStore()
+        let sut = makeSUT()
         let exp = expectation(description: "Wait for cache")
         sut.retrieve { result1 in
             sut.retrieve { result2 in
@@ -106,7 +110,7 @@ class CodableFeedStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     func test_retrieve_after_insert_to_empty_cache_delivers_inserted_values() {
-        let sut = CodableFeedStore()
+        let sut = makeSUT()
         let exp = expectation(description: "Wait for cache")
         let feed = uniqueImageFeed().local
         let timestamp = Date()
@@ -130,7 +134,8 @@ class CodableFeedStoreTests: XCTestCase {
     //-MARK: Helpers
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
-        let sut = CodableFeedStore()
+        let store = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("image-feed.store")
+        let sut = CodableFeedStore(storeURL: store)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
