@@ -66,14 +66,14 @@ class CodableFeedStoreTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        let storeURL = testSpecificStoreURL()
-        try? FileManager.default.removeItem(at: storeURL)
+        
+        setupEmptyStoreState()
     }
     override func tearDown() {
         super.tearDown()
         
-        let storeURL = testSpecificStoreURL()
-        try? FileManager.default.removeItem(at: storeURL)
+        
+        undoStoreSideEffects()
     }
 
     func test_retrievesDeliversEmptyOnEmptyCache() {
