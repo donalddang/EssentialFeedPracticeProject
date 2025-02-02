@@ -83,24 +83,12 @@ class CodableFeedStoreTests: XCTestCase {
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
-        let exp = expectation(description: "Wait for cache")
-        sut.retrieve { result1 in
-            sut.retrieve { result2 in
-                switch (result1, result2) {
-                case (.empty, .empty):
-                    break
-                default:
-                    XCTFail("Expected 2 empty results, got \(result1) and \(result2) instead")
-                }
-                exp.fulfill()
-            }
-        }
         
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toRetrieveTwice: .empty)
     }
     func test_retrieve_after_insert_to_empty_cache_delivers_inserted_values() {
         let sut = makeSUT()
-        let exp = expectation(description: "Wait for cache")
+        let exp = expectation(description: "Wait for insertion")
         let feed = uniqueImageFeed().local
         let timestamp = Date()
         sut.insert(feed, timestamp: timestamp) { insertionError in
@@ -109,7 +97,7 @@ class CodableFeedStoreTests: XCTestCase {
         }
         
         wait(for: [exp], timeout: 1.0)
-        expect(sut, toRetrieve: .found(feed: feed, timestamp: timestamp))
+        expect(sut, toRetrieveTwice: .found(feed: feed, timestamp: timestamp))
     }
     
     func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
