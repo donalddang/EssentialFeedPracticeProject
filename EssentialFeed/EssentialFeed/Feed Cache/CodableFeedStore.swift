@@ -5,11 +5,12 @@
 //  Created by Donald Dang on 2/2/25.
 //
 
-import EssentialFeed
+
 import Foundation
+import EssentialFeed
 
 
-class CodableFeedStore: FeedStore {
+public class CodableFeedStore: FeedStore {
     private struct Cache: Codable {
         let feed: [CodableFeedImage]
         let timestamp: Date
@@ -39,12 +40,12 @@ class CodableFeedStore: FeedStore {
     
     private let storeURL: URL
     
-    init(storeURL: URL) {
+    public init(storeURL: URL) {
         self.storeURL = storeURL
     }
     
     
-    func retrieve(completion: @escaping RetrievalCompletion) {
+    public func retrieve(completion: @escaping RetrievalCompletion) {
         guard let data = try? Data(contentsOf: storeURL) else {
             return completion(.empty)
         }
@@ -57,7 +58,7 @@ class CodableFeedStore: FeedStore {
         }
     }
     
-    func insert(_ feed: [FeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
+    public func insert(_ feed: [FeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
         do {
             let encoder = JSONEncoder()
             let cache = Cache(feed: feed.map(CodableFeedImage.init), timestamp: timestamp)
@@ -69,7 +70,7 @@ class CodableFeedStore: FeedStore {
         }
     }
     
-    func deleteCachedFeed(completion: @escaping DeletionCompletion) {
+    public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
         guard FileManager.default.fileExists(atPath: storeURL.path) else {
             return completion(nil)
         }

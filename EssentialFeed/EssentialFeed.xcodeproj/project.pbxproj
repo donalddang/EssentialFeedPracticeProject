@@ -30,6 +30,7 @@
 		4D8E14E62D49736500A4A326 /* FeedCacheTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E14E52D49736500A4A326 /* FeedCacheTestHelpers.swift */; };
 		4D8E14EA2D4D5A2F00A4A326 /* FeedCachePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E14E92D4D5A2F00A4A326 /* FeedCachePolicy.swift */; };
 		4D8E14F52D4EADEF00A4A326 /* CodableFeedStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E14F42D4EADEF00A4A326 /* CodableFeedStoreTests.swift */; };
+		4D8E14F92D5011AF00A4A326 /* CodableFeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E14F82D5011AF00A4A326 /* CodableFeedStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		4D8E14E52D49736500A4A326 /* FeedCacheTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCacheTestHelpers.swift; sourceTree = "<group>"; };
 		4D8E14E92D4D5A2F00A4A326 /* FeedCachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCachePolicy.swift; sourceTree = "<group>"; };
 		4D8E14F42D4EADEF00A4A326 /* CodableFeedStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableFeedStoreTests.swift; sourceTree = "<group>"; };
+		4D8E14F82D5011AF00A4A326 /* CodableFeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableFeedStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -198,6 +200,7 @@
 				4D8E14E92D4D5A2F00A4A326 /* FeedCachePolicy.swift */,
 				4D8E14D82D46BCA600A4A326 /* FeedStore.swift */,
 				4D8E14DC2D46C76300A4A326 /* FeedImage.swift */,
+				4D8E14F82D5011AF00A4A326 /* CodableFeedStore.swift */,
 			);
 			path = "Feed Cache";
 			sourceTree = "<group>";
@@ -383,6 +386,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D8E14F92D5011AF00A4A326 /* CodableFeedStore.swift in Sources */,
 				4D8E14E62D49736500A4A326 /* FeedCacheTestHelpers.swift in Sources */,
 				4D8E14BD2D400FC200A4A326 /* XCTestCase_MemoryLeakTesting.swift in Sources */,
 				4D589DDD2D0B75EF00544B43 /* RemoteFeedLoaderTests.swift in Sources */,
