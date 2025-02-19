@@ -55,7 +55,7 @@ class CodableFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
         let timestamp = Date()
         
         insert((feed, timestamp), to: sut)
-        expect(sut, toRetrieveTwice: .found(feed: feed, timestamp: timestamp))
+        expect(sut, toRetrieveTwice: .success(.found(feed: feed, timestamp: timestamp)))
         
     }
     
@@ -151,7 +151,7 @@ class CodableFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
         
         insert((feed, timestamp), to: sut)
         
-        expect(sut, toRetrieve: .empty)
+        expect(sut, toRetrieve: .success(.empty))
     }
     
     func test_delete_hasNoSideEffectsOnDeletionError() {
