@@ -9,19 +9,13 @@ import Foundation
 
 
 
-public struct CachedFeed {
-    public let feed: [FeedImage]
-    public let timestamp: Date
-    
-    public init(feed: [FeedImage], timestamp: Date) {
-        self.feed = feed
-        self.timestamp = timestamp
-    }
-}
+public typealias CachedFeed = (feed: [FeedImage], timestamp: Date)
 
 public protocol FeedStore {
-    typealias DeletionCompletion = (Error?) -> Void
-    typealias InsertionCompletion = (Error?) -> Void
+    typealias DeletionResult = Error?
+    typealias DeletionCompletion = (DeletionResult) -> Void
+    typealias InsertionResult = Error?
+    typealias InsertionCompletion = (InsertionResult) -> Void
     typealias RetrievalResult = Result<CachedFeed?, Error>
     typealias RetrievalCompletion = (RetrievalResult) -> Void
     /// The completion handler can be invoked in any thread.
