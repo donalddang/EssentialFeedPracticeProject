@@ -16,14 +16,14 @@ public final class RemoteFeedLoader: FeedLoader {
         case invalidData
     }
     
-    public typealias Result = LoadFeedResult //typealias allows us to use the public enum in our Feed Feature
+    
     
     public init(url: URL, client: HTTPClient) {
         self.url = url
         self.client = client
     }
     /// this func uses the url property in .get so can't use static func; use the weak self instead
-    public func load(completion: @escaping (Result) -> Void) {
+    public func load(completion: @escaping (FeedLoader.Result) -> Void) {
         client.get(from: url) { [weak self] result in
             guard self != nil else { return }
             switch result {
@@ -37,7 +37,7 @@ public final class RemoteFeedLoader: FeedLoader {
         }
     }
     
-    private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+    private static func map(_ data: Data, from response: HTTPURLResponse) -> FeedLoader.Result {
         do {
             let items = try FeedItemsMapper.map(data, from: response)
             return .success(items.toModels())
