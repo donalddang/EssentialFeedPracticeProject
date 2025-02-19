@@ -82,8 +82,6 @@ class CodableFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
         let sut = makeSUT()
         insert((uniqueImageFeed().local, Date()), to: sut)
         
-        let insertionError = insert((uniqueImageFeed().local, Date()), to: sut)
-        
         assertThatInsertDeliversNoErrorOnEmptyCache(on: sut)
     }
     
