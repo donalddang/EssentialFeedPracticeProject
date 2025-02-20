@@ -16,7 +16,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedImageCell" rowHeight="500" id="qhe-hT-dZf">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedImageCell" rowHeight="500" id="qhe-hT-dZf" customClass="FeedImageCell" customModule="Prototype" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="50" width="393" height="500"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qhe-hT-dZf" id="Bic-bd-HEx">
@@ -79,6 +79,12 @@
                                         <constraint firstItem="CoP-C6-hQc" firstAttribute="leading" secondItem="Bic-bd-HEx" secondAttribute="leadingMargin" id="bsw-RP-Tla"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="descriptionLabel" destination="9ap-hv-SUB" id="5qd-wF-84P"/>
+                                    <outlet property="feedImageView" destination="k14-1v-sCK" id="uK4-O3-CfJ"/>
+                                    <outlet property="locationContainer" destination="n3c-1X-j2n" id="pZw-WX-Ueq"/>
+                                    <outlet property="locationLabel" destination="7bt-dR-XyM" id="Pkq-1C-hDU"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
