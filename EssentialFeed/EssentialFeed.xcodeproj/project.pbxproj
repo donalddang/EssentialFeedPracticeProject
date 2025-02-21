@@ -443,6 +443,7 @@
 					};
 					4D90A57F2D69086200BE4FAB = {
 						CreatedOnToolsVersion = 16.2;
+						LastSwiftMigration = 1620;
 					};
 				};
 			};
@@ -953,6 +954,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AMJ42PQPUD;
@@ -966,6 +968,8 @@
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "EssentialFeediOSTests/EssentialFeediOSTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -974,6 +978,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AMJ42PQPUD;
@@ -986,6 +991,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "EssentialFeediOSTests/EssentialFeediOSTests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
