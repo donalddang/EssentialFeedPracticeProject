@@ -361,6 +361,12 @@ extension FeedViewController {
         ds?.tableView(tableView, prefetchRowsAt: [index])
     }
     
+    func simulateFeedImageViewNotNearVisible(at row: Int) {
+        let ds = tableView.prefetchDataSource
+        let index = IndexPath(row: row, section: feedImagesSection)
+        ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [index])
+    }
+    
     var isShowingLoadingIndicator: Bool {
         return refreshControl?.isRefreshing == true
     }
