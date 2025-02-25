@@ -166,10 +166,6 @@ final class FeedViewControllerTests: XCTestCase {
     class LoaderSpy: FeedLoader, FeedImageDataLoader {
         private var feedRequests = [(FeedLoader.Result) -> Void]()
         
-        func loadImageData(from url: URL) {
-            loadedImageURLs.append(url)
-        }
-        
         func load(completion: @escaping (FeedLoader.Result) -> Void) {
             
             feedRequests.append(completion)
@@ -186,11 +182,25 @@ final class FeedViewControllerTests: XCTestCase {
         
         // MARK: -FeedImageDataLoader
         
+        private struct TaskSpy: FeedImageDataLoaderTask {
+            let cancelCallback: () -> Void
+            func cancel() {
+                cancelCallback()
+            }
+        }
+        
         private(set) var loadedImageURLs = [URL]()
         private(set) var cancelledImageURLs = [URL]()
         
         var loadFeedCallCount: Int {
             return feedRequests.count
+        }
+        
+        func loadImageData(from url: URL) -> FeedImageDataLoaderTask {
+            loadedImageURLs.append(url)
+            return TaskSpy { [weak self] in
+                self?.cancelledImageURLs.append(url)
+            }
         }
         
         func cancelImageDataLoad(from url: URL) {
@@ -234,10 +244,7 @@ extension FeedViewController {
         return ds?.tableView(tableView, cellForRowAt: index)
     }
     
-    public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let cellModel = tableModel[indexPath.row]
-        imageLoader?.cancelImageDataLoad(from: cellModel.imageURL)
-    }
+    
 }
 
 
